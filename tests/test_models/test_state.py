@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Defines the unittests for models/test_state.py
+Defines the unittests for models/state.py
 """
 import os
 from tests.test_models.test_base_model import TestBasemodel
@@ -25,7 +25,7 @@ class TestState(TestBasemodel):
         Tests the type of name attribute
         """
         new = self.value()
-        self.assertEqual(
-            type(new.name),
-            str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
-        )
+        if os.getenv('HBNB_TYPE_STORAGE') != 'db':
+            self.assertEqual(type(new.name), str)
+        else:
+            self.assertIsNone(new.name)
