@@ -1,49 +1,26 @@
-#!/usr/bin/python3
-"""
-Defines the unittests for models/state.py
-"""
-import os
-import unittest
-from models.state import State
-
-
-class TestState(unittest.TestCase):
+def test_name_attribute(self):
     """
-    A unittest class for testing the State model
+    Test the 'name' attribute of the State instance
     """
+    # Create a State instance
+    new_state = State(name="California")
+    
+    if os.getenv('HBNB_TYPE_STORAGE') != 'db':
+        # For non-DB storage, 'name' should be of type str
+        self.assertIsInstance(new_state.name, str)
+        self.assertEqual(new_state.name, "California")  # Additional assertion
+    else:
+        # For DB storage, 'name' should initially be None
+        self.assertIsNone(new_state.name)
 
-    def setUp(self):
-        """
-        Set up before each test case
-        """
-        self.state = State()
-
-    def tearDown(self):
-        """
-        Clean up after each test case
-        """
-        del self.state
-
-    def test_name_attribute(self):
-        """
-        Test the 'name' attribute of the State instance
-        """
-        # Check if the 'name' attribute is of type str
-        if os.getenv('HBNB_TYPE_STORAGE') != 'db':
-            self.assertIsInstance(self.state.name, str)
-        else:
-            # For database storage, 'name' should initially be None
-            self.assertIsNone(self.state.name)
-
-    def test_save_method(self):
-        """
-        Test the 'save' method of the State instance
-        """
-        # Save the State instance and check if the updated_at attribute changes
-        initial_updated_at = self.state.updated_at
-        self.state.save()
-        self.assertNotEqual(self.state.updated_at, initial_updated_at)
-
-
-if __name__ == '__main__':
-    unittest.main()
+def test_save_method(self):
+    """
+    Test the 'save' method of the State instance
+    """
+    # Create a State instance
+    new_state = State(name="New York")
+    
+    # Save the State instance and check if 'updated_at' changes
+    initial_updated_at = new_state.updated_at
+    new_state.save()
+    self.assertNotEqual(new_state.updated_at, initial_updated_at)
