@@ -3,6 +3,7 @@ from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 from models.state import State
 
+
 class TestState(unittest.TestCase):
     """Test cases for State class"""
 
@@ -44,6 +45,7 @@ class TestState(unittest.TestCase):
 
         key = "State.{}".format(state.id)
         self.assertIn(key, storage.all())
+
 
 if __name__ == "__main__":
     unittest.main()
