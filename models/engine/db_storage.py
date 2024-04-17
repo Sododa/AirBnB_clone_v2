@@ -1,28 +1,26 @@
 #!/usr/bin/python3
-"""
-This module defines a class
-"""
-
+"""This module defines a class to manage database storage for hbnb clone"""
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-# import urllib.parse
-from models.base_model import Base
+import urllib.parse
+
+from models.base_model import BaseModel, Base
 from models.state import State
 from models.city import City
 from models.user import User
-from models.place import Place
+from models.place import Place, place_amenity
 from models.amenity import Amenity
 from models.review import Review
 
 
 class DBStorage:
-    """This class hbnb models in a SQL database"""
+    """This class manages storage of hbnb models in a SQL database"""
     __engine = None
     __session = None
 
     def __init__(self):
-        """Initializes storage"""
+        """Initializes the SQL database storage"""
         user = os.getenv('HBNB_MYSQL_USER')
         pword = os.getenv('HBNB_MYSQL_PWD')
         host = os.getenv('HBNB_MYSQL_HOST')
@@ -31,7 +29,6 @@ class DBStorage:
         DATABASE_URL = "mysql+mysqldb://{}:{}@{}:3306/{}".format(
             user, pword, host, db_name
         )
-
         self.__engine = create_engine(
             DATABASE_URL,
             pool_pre_ping=True
@@ -40,7 +37,7 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """Returns a dictionary of models in storage"""
+        """Returns a dictionary of models currently in storage"""
         objects = dict()
         all_classes = (User, State, City, Amenity, Place, Review)
         if cls is None:
@@ -57,7 +54,7 @@ class DBStorage:
         return objects
 
     def delete(self, obj=None):
-        """Removes objects from the storage database"""
+        """Removes an object from the storage database"""
         if obj is not None:
             self.__session.query(type(obj)).filter(
                 type(obj).id == obj.id).delete(
@@ -65,7 +62,7 @@ class DBStorage:
             )
 
     def new(self, obj):
-        """Adds object to storage database"""
+        """Adds new object to storage database"""
         if obj is not None:
             try:
                 self.__session.add(obj)
@@ -76,11 +73,11 @@ class DBStorage:
                 raise ex
 
     def save(self):
-        """saves session changes to database"""
+        """Commits the session changes to database"""
         self.__session.commit()
 
     def reload(self):
-        """reLoads storage database"""
+        """Loads database"""
         Base.metadata.create_all(self.__engine)
         SessionFactory = sessionmaker(
             bind=self.__engine,
@@ -89,5 +86,5 @@ class DBStorage:
         self.__session = scoped_session(SessionFactory)()
 
     def close(self):
-        """Closes storage engine."""
+        """Closes engine."""
         self.__session.close()

@@ -176,7 +176,7 @@ def test_updated_at(self):
 @unittest.skipIf(
     os.getenv('HBNB_TYPE_STORAGE') == 'db', 'FileStorage test')
 def test_delete(self):
-    """Tests the delete function of the BaseModel class."""
+    """Tests the delete the BaseModel class."""
     from models import storage
     i = self.value()
     i.save()

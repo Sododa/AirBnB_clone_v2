@@ -1,12 +1,10 @@
 #!/usr/bin/python3
-"""
-Defines the unittests for models/engine/db_storage.py
-"""
-
+""" Module for testing file storage"""
 import MySQLdb
 import os
 import unittest
 from datetime import datetime
+
 from models import storage
 from models.user import User
 
@@ -14,14 +12,9 @@ from models.user import User
 @unittest.skipIf(
     os.getenv('HBNB_TYPE_STORAGE') != 'db', 'DBStorage test')
 class TestDBStorage(unittest.TestCase):
-    """
-    A unittest for DBStorage class
-    """
-
+    """ Class to test the database storage method """
     def test_new(self):
-        """
-        Tests the new method
-        """
+        """ New object is correctly added to database """
         new = User(
             email='john2020@gmail.com',
             password='password',
@@ -50,9 +43,7 @@ class TestDBStorage(unittest.TestCase):
         dbc.close()
 
     def test_delete(self):
-        """
-        Tests the delete method
-        """
+        """ Object is correctly deleted from database """
         new = User(
             email='john2020@gmail.com',
             password='password',
@@ -84,9 +75,7 @@ class TestDBStorage(unittest.TestCase):
         dbc.close()
 
     def test_reload(self):
-        """
-        Tests the reload method
-        """
+        """ Tests the reloading of the database session """
         dbc = MySQLdb.connect(
             host=os.getenv('HBNB_MYSQL_HOST'),
             port=3306,
@@ -116,9 +105,7 @@ class TestDBStorage(unittest.TestCase):
         dbc.close()
 
     def test_save(self):
-        """
-        Tests the save method
-        """
+        """ object is successfully saved to database """
         new = User(
             email='john2020@gmail.com',
             password='password',
@@ -161,9 +148,7 @@ class TestDBStorage(unittest.TestCase):
         dbc.close()
 
     def test_storage_var_created(self):
-        """
-        Tests if the storage variable is created
-        """
+        """ DBStorage object storage created """
         from models.engine.db_storage import DBStorage
         self.assertEqual(type(storage), DBStorage)
 
