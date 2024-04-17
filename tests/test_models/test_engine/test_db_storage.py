@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Defines the unittests for db_storage.py
+Defines the unittests for models/engine/db_storage.py
 """
 
 import MySQLdb
@@ -15,18 +15,18 @@ from models.user import User
     os.getenv('HBNB_TYPE_STORAGE') != 'db', 'DBStorage test')
 class TestDBStorage(unittest.TestCase):
     """
-    A unittest db storage class
+    A unittest for DBStorage class
     """
 
     def test_new(self):
         """
-        Tests the new self
+        Tests the new method
         """
         new = User(
-            email='john2024@gmail.com',
+            email='john2020@gmail.com',
             password='password',
             first_name='John',
-            last_name='Zoldck'
+            last_name='Zoldyck'
         )
         self.assertFalse(new in storage.all().values())
         new.save()
@@ -42,22 +42,22 @@ class TestDBStorage(unittest.TestCase):
         cursor.execute('SELECT * FROM users WHERE id="{}"'.format(new.id))
         result = cursor.fetchone()
         self.assertTrue(result is not None)
-        self.assertIn('john2024@gmail.com', result)
+        self.assertIn('john2020@gmail.com', result)
         self.assertIn('password', result)
         self.assertIn('John', result)
-        self.assertIn('Zoldck', result)
+        self.assertIn('Zoldyck', result)
         cursor.close()
         dbc.close()
 
     def test_delete(self):
         """
-        Tests method
+        Tests the delete method
         """
         new = User(
-            email='john2024@gmail.com',
+            email='john2020@gmail.com',
             password='password',
             first_name='John',
-            last_name='Zoldck'
+            last_name='Zoldyck'
         )
         obj_key = 'User.{}'.format(new.id)
         dbc = MySQLdb.connect(
@@ -73,10 +73,10 @@ class TestDBStorage(unittest.TestCase):
         cursor.execute('SELECT * FROM users WHERE id="{}"'.format(new.id))
         result = cursor.fetchone()
         self.assertTrue(result is not None)
-        self.assertIn('john2024@gmail.com', result)
+        self.assertIn('john2020@gmail.com', result)
         self.assertIn('password', result)
         self.assertIn('John', result)
-        self.assertIn('Zoldck', result)
+        self.assertIn('Zoldyck', result)
         self.assertIn(obj_key, storage.all(User).keys())
         new.delete()
         self.assertNotIn(obj_key, storage.all(User).keys())
@@ -85,7 +85,7 @@ class TestDBStorage(unittest.TestCase):
 
     def test_reload(self):
         """
-        Tests the reload
+        Tests the reload method
         """
         dbc = MySQLdb.connect(
             host=os.getenv('HBNB_MYSQL_HOST'),
@@ -102,7 +102,7 @@ class TestDBStorage(unittest.TestCase):
                 '4447-by-me',
                 str(datetime.now()),
                 str(datetime.now()),
-                'ben@yahoo.com',
+                'ben_pike@yahoo.com',
                 'pass',
                 'Benjamin',
                 'Pike',
@@ -120,10 +120,10 @@ class TestDBStorage(unittest.TestCase):
         Tests the save method
         """
         new = User(
-            email='john2024@gmail.com',
+            email='john2020@gmail.com',
             password='password',
             first_name='John',
-            last_name='Zoldck'
+            last_name='Zoldyck'
         )
         dbc = MySQLdb.connect(
             host=os.getenv('HBNB_MYSQL_HOST'),
@@ -162,7 +162,7 @@ class TestDBStorage(unittest.TestCase):
 
     def test_storage_var_created(self):
         """
-        Tests storage variable
+        Tests if the storage variable is created
         """
         from models.engine.db_storage import DBStorage
         self.assertEqual(type(storage), DBStorage)
@@ -175,8 +175,8 @@ class TestDBStorage(unittest.TestCase):
                              port=3306,
                              db=os.getenv('HBNB_MYSQL_DB'))
         new_user = User(**{'first_name': 'jack',
-                           'last_name': 'bondy',
-                           'email': 'jack@bondy.com',
+                           'last_name': 'bond',
+                           'email': 'jack@bond.com',
                            'password': 12345})
         cur = db.cursor()
         cur.execute('SELECT COUNT(*) FROM users')

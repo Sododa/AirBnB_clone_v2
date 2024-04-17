@@ -1,28 +1,34 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
-
-from models.base_model import BaseModel, Base
+import os
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
+
+from models.base_model import BaseModel, Base
 from models.city import City
-import models
-import os
 
 
 class State(BaseModel, Base):
-    """ State class """
+    """State class inherits from BaseModel"""
     __tablename__ = 'states'
+    name = Column(
+        String(128),
+        nullable=False
+    ) if os.getenv('HBNB_TYPE_STORAGE') == 'db' else ''
 
-    name = Column(String(128), nullable=False)
-
-    if os.getenv("HBNB_TYPE_STORAGE") == "db":
-        cities = relationship('City', backref='state',
-                              cascade='all, delete-orphan')
-
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+        cities = relationship(
+            'City',
+            cascade='all, delete, delete-orphan',
+            backref='state'
+        )
     else:
         @property
         def cities(self):
-            """ Returns the list of City instances with state_id
-            equals to the current State.id. """
-            return [city for city in models.storage.all(City).values()
-                    if city.state_id == self.id]
+            """Returns the cities in this"""
+            from models import storage
+            cities_in_state = []
+            for value in storage.all(City).values():
+                if value.state_id == self.id:
+                    cities_in_state.append(value)
+            return cities_in_state
