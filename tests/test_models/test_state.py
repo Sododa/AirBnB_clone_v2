@@ -3,29 +3,47 @@
 Defines the unittests for models/state.py
 """
 import os
-from tests.test_models.test_base_model import TestBasemodel
+import unittest
 from models.state import State
 
 
-class TestState(TestBasemodel):
+class TestState(unittest.TestCase):
     """
-    A unittest for State class
+    A unittest class for testing the State model
     """
 
-    def __init__(self, *args, **kwargs):
+    def setUp(self):
         """
-        Initializes the test class for State
+        Set up before each test case
         """
-        super().__init__(*args, **kwargs)
-        self.name = "State"
-        self.value = State
+        self.state = State()
 
-    def test_name3(self):
+    def tearDown(self):
         """
-        Tests the type of name attribute
+        Clean up after each test case
         """
-        new = self.value()
+        del self.state
+
+    def test_name_attribute(self):
+        """
+        Test the 'name' attribute of the State instance
+        """
+        # Check if the 'name' attribute is of type str
         if os.getenv('HBNB_TYPE_STORAGE') != 'db':
-            self.assertEqual(type(new.name), str)
+            self.assertIsInstance(self.state.name, str)
         else:
-            self.assertIsNone(new.name)
+            # For database storage, 'name' should initially be None
+            self.assertIsNone(self.state.name)
+
+    def test_save_method(self):
+        """
+        Test the 'save' method of the State instance
+        """
+        # Save the State instance and check if the updated_at attribute changes
+        initial_updated_at = self.state.updated_at
+        self.state.save()
+        self.assertNotEqual(self.state.updated_at, initial_updated_at)
+
+
+if __name__ == '__main__':
+    unittest.main()
