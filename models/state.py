@@ -13,6 +13,9 @@ from sqlalchemy.orm import relationship
 class State(BaseModel, Base):
     """Represents a state for a MySQL database.
     """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = kwargs.get('name', '')
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
     cities = relationship("City",  backref="state", cascade="delete")
