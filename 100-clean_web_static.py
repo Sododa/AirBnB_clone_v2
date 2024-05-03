@@ -6,7 +6,7 @@ Deletes out-of-date archives
 import os
 from fabric.api import *
 
-env.hosts = ['54.237.33.216', '	54.236.54.40']
+env.hosts = ['54.237.33.216', '54.236.54.40']
 
 
 def do_clean(number=0):
