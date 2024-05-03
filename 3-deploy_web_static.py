@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-script to deploy web static
+Fabric script based on the file 2-do_deploy_web_static.py that create
 """
 
 from fabric.api import env, local, put, run
@@ -10,7 +10,7 @@ env.hosts = ['54.237.33.216', '54.236.54.40']
 
 
 def do_pack():
-    """do pack archive"""
+    """generates a tgz archive"""
     try:
         date = datetime.now().strftime("%Y%m%d%H%M%S")
         if isdir("versions") is False:
@@ -18,14 +18,12 @@ def do_pack():
         file_name = "versions/web_static_{}.tgz".format(date)
         local("tar -cvzf {} web_static".format(file_name))
         return file_name
-    "exception handling"
-    except:
-        "exception handling"
+    except Exception as e:
         return None
 
 
 def do_deploy(archive_path):
-    """do seploys servers"""
+    """distributes an archive to the web servers"""
     if exists(archive_path) is False:
         return False
     try:
@@ -41,14 +39,12 @@ def do_deploy(archive_path):
         run('rm -rf /data/web_static/current')
         run('ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
         return True
-    "exception handling"
-    except:
-        "excepyion handling"
+    except Exception as e:
         return False
 
 
 def deploy():
-    """defines and deploys servers"""
+    """creates and distributes an archive to the web servers"""
     archive_path = do_pack()
     if archive_path is None:
         return False
