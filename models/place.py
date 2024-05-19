@@ -7,7 +7,6 @@ from models.base_model import BaseModel, Base
 from models.review import Review
 from models.amenity import Amenity
 
-
 place_amenity = Table(
     'place_amenity',
     Base.metadata,
@@ -35,7 +34,7 @@ class Place(BaseModel, Base):
     """ place to stay """
     __tablename__ = 'places'
     city_id = Column(
-        String(60), ForeignKey('cities.id'), nullable=False
+            String(60), ForeignKey('cities.id'), nullable=False
     ) if os.getenv('HBNB_TYPE_STORAGE') == 'db' else ''
     user_id = Column(
         String(60), ForeignKey('users.id'), nullable=False
@@ -80,27 +79,4 @@ class Place(BaseModel, Base):
     else:
         @property
         def amenities(self):
-            """defines amenities the amenities of this Place"""
-            from models import storage
-            amenities_of_place = []
-            for value in storage.all(Amenity).values():
-                if value.id in self.amenity_ids:
-                    amenities_of_place.append(value)
-            return amenities_of_place
-
-        @amenities.setter
-        def amenities(self, value):
-            """defines amenity to this Place"""
-            if type(value) is Amenity:
-                if value.id not in self.amenity_ids:
-                    self.amenity_ids.append(value.id)
-
-        @property
-        def reviews(self):
-            """defines reviews of this Place"""
-            from models import storage
-            reviews_of_place = []
-            for value in storage.all(Review).values():
-                if value.place_id == self.id:
-                    reviews_of_place.append(value)
-            return reviews_of_place
+            """defines amenities the amenities of"""
