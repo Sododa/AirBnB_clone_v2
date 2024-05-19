@@ -1,24 +1,32 @@
 #!/usr/bin/python3
-"""
-a script that starts a Flask web applicationstart Flask application"""
+"""starts a Flask web application"""
 
 from flask import Flask, render_template
-from models import *
-from models import storage
-app = Flask(__name__)
+import models
 
-
-@app.route('/cities_by_states', strict_slashes=False)
-def cities_by_states():
-    """display the states and cities listed in alphabetical order"""
-    states = storage.all("State").values()
-    return render_template('8-cities_by_states.html', states=states)
+app = Flask("__name__")
 
 
 @app.teardown_appcontext
-def teardown_db(exception):
-    """closes the storage on teardown"""
-    storage.close()
+def refresh(exception):
+        models.storage.close()
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000')
+
+@app.route("/states_list", strict_slashes=False)
+def route_states():
+        pep_fix = models.dummy_classes["State"]
+        data = models.storage.all(cls=pep_fix)
+        states = data.values()
+        return render_template('7-states_list.html', states_list=states)
+
+
+@app.route("/cities_by_states", strict_slashes=False)
+def route_city():
+        pep_fix = models.dummy_classes["State"]
+        data = models.storage.all(cls=pep_fix)
+        states = data.values()
+        return render_template('8-cities_by_states.html', states_list=states)
+
+
+if __name__ == "__main__":
+        app.run()
